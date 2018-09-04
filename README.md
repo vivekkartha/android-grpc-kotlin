@@ -1,5 +1,5 @@
 # android-grpc-kotlin
-An attempt to learn Grpc in Android using Kotlin
+Demo app using gRPC with Android written in Kotlin
 
 ##### Libraries used
 * OkHttp
