@@ -3,5 +3,5 @@ Demo app using gRPC with Android written in Kotlin
 
 ##### Libraries used
 * OkHttp
-* RxKotlin
+* Anko
 * Protobuf-lite 3.0.1
