@@ -6,6 +6,8 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'com.google.protobuf'
 
+apply plugin: 'idea'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -28,6 +30,14 @@ android {
     }
 }
 
+idea {
+    module {
+        sourceDirs += file("$projectDir/src/generated/main/java")
+        sourceDirs += file("$projectDir/src/generated/main/grpc")
+    }
+}
+
+def grpcVersion = '1.14.0'
 protobuf {
     protoc {
         artifact = 'com.google.protobuf:protoc:3.0.0'
@@ -36,6 +46,9 @@ protobuf {
         javalite {
             artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
         }
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
+        }
     }
     generateProtoTasks {
         all().each { task ->
@@ -43,9 +56,11 @@ protobuf {
                 remove java
             }
             task.plugins {
-                javalite { }
+                javalite {}
+                grpc { option 'lite' }
             }
         }
+        generatedFilesBaseDir = "$projectDir/src/generated"
     }
 }
 
@@ -54,10 +69,12 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.android.support:appcompat-v7:28.0.0-rc02'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'org.jetbrains.anko:anko-common:0.9'
-    //Protobuf
-    implementation 'com.google.protobuf:protobuf-lite:3.0.1'
+    //Protobuf and gRPC
+    implementation "io.grpc:grpc-okhttp:$grpcVersion"
+    implementation "io.grpc:grpc-protobuf-lite:$grpcVersion"
+    implementation "io.grpc:grpc-stub:$grpcVersion"
+    implementation 'javax.annotation:javax.annotation-api:1.3.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
